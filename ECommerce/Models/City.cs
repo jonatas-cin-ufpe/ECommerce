@@ -9,11 +9,18 @@ namespace ECommerce.Models
     public class City
     {   
         [Key]
+        [Display(Name = "Id da Cidade")]
         public int CityId { get; set; }
         
         [Required(ErrorMessage = "O campo Nome é obrigatório!")]
+        [Display(Name = "Cidade")]
         public String Name { get; set; }
 
+        [Display(Name = "Departamento")]
         public int DepartmentsId { get; set; }
+        
+        
+        [Display(Name = "Departamento")]
+        public Departments Department { get; set; }
     }
 }
