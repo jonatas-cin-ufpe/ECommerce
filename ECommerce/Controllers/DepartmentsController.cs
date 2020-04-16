@@ -47,8 +47,24 @@ namespace ECommerce.Controllers
             if (ModelState.IsValid)
             {
                 db.Departments.Add(departments);
-                db.SaveChanges();
-                return RedirectToAction("Index");
+                try
+                {
+                    db.SaveChanges();
+                    return RedirectToAction("Index");
+                }
+                catch (System.Exception ex)
+                {
+
+                    if (ex.InnerException != null && ex.InnerException.InnerException != null && ex.InnerException.InnerException.Message.Contains("_Index"))
+                    {
+                        ModelState.AddModelError(string.Empty, "Não é possível inserir dois departamentos com o mesmo nome");
+                    }
+                    else
+                    {
+                        ModelState.AddModelError(string.Empty, ex.Message);
+                    }
+                    return View(departments);
+                }
             }
 
             return View(departments);
@@ -78,9 +94,26 @@ namespace ECommerce.Controllers
         {
             if (ModelState.IsValid)
             {
+
                 db.Entry(departments).State = EntityState.Modified;
-                db.SaveChanges();
-                return RedirectToAction("Index");
+                try
+                {      
+                    db.SaveChanges();
+                    return RedirectToAction("Index");
+                }
+                catch (System.Exception ex)
+                {
+
+                    if (ex.InnerException != null && ex.InnerException.InnerException != null && ex.InnerException.InnerException.Message.Contains("_Index"))
+                    {
+                        ModelState.AddModelError(string.Empty, "Não é possível inserir dois departamentos com o mesmo nome");
+                    }
+                    else
+                    {
+                        ModelState.AddModelError(string.Empty, ex.Message);
+                    }
+                    return View(departments);
+                }
             }
             return View(departments);
         }
@@ -107,8 +140,25 @@ namespace ECommerce.Controllers
         {
             Departments departments = db.Departments.Find(id);
             db.Departments.Remove(departments);
-            db.SaveChanges();
-            return RedirectToAction("Index");
+
+            try
+            {
+                db.SaveChanges();
+                return RedirectToAction("Index");
+            }
+            catch (System.Exception ex)
+            {
+
+                if (ex.InnerException != null && ex.InnerException.InnerException != null && ex.InnerException.InnerException.Message.Contains("REFERENCE"))
+                {
+                    ModelState.AddModelError(string.Empty, "Não é possível remover o Departamento porque existem cidades relacionadas, exclua as cidades relacionadas e tente novamente");
+                }
+                else
+                {
+                    ModelState.AddModelError(string.Empty, ex.Message);
+                }
+                return View(departments);
+            }
         }
 
         protected override void Dispose(bool disposing)
@@ -121,3 +171,7 @@ namespace ECommerce.Controllers
         }
     }
 }
+
+
+
+
