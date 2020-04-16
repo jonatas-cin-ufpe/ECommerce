@@ -18,5 +18,6 @@ namespace ECommerce.Models
         public String Name { get; set; }
 
         public virtual ICollection<City> Cities { get; set; }
+        public virtual ICollection<Company> Company { get; set; }
     }
 }

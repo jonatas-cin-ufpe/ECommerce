@@ -1,8 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
-using System.Linq;
-using System.Web;
 
 namespace ECommerce.Models
 {
@@ -23,5 +21,6 @@ namespace ECommerce.Models
         
         [Display(Name = "Departamento")]
         public Departments Department { get; set; }
+        public virtual ICollection<Company> Company { get; set; }
     }
 }
