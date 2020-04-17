@@ -35,6 +35,9 @@ namespace ECommerce.Models
         [DataType(DataType.ImageUrl)]
         public String Logo { get; set; }
 
+        [NotMapped]
+        public HttpPostedFileBase LogoFile { set; get; }
+
         [Required(ErrorMessage = "O campo cidade é obrigatório!")]
         [Display(Name = "Cidade")]
         public int CityId { get; set; }
