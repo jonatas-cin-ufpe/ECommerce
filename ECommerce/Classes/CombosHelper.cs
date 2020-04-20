@@ -42,7 +42,6 @@ namespace ECommerce.Classes
 
         public void Dispose()
         {
-
             db.Dispose();
         }
 
