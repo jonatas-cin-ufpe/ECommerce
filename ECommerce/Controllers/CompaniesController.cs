@@ -18,7 +18,7 @@ namespace ECommerce.Controllers
         //UPLOAD DE IMAGENS
 
         //CONTROLE DE LIST VIEW EM CASCATA
-        public JsonResult GetCities (int departmentId)
+        public JsonResult GetCities(int departmentId)
         {
             db.Configuration.ProxyCreationEnabled = false;
             var cities = db.Cities.Where(m => m.DepartmentsId == departmentId);
@@ -60,21 +60,33 @@ namespace ECommerce.Controllers
         // obter mais detalhes, consulte https://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Create( Company company)
+        public ActionResult Create(Company company)
         {
             if (ModelState.IsValid)
             {
-                var pic = string.Empty;
-                var folder = "~/Content/Logos";
 
-                if(company.LogoFile != null)
+                db.Companies.Add(company);
+                db.SaveChanges();
+
+
+                if (company.LogoFile != null)
                 {
-                    pic = FilesHelper.UploadPhoto(company.LogoFile, folder);
-                    pic = string.Format("{0}/{1}", folder, pic);                   
+
+                    var pic = string.Empty;
+                    var folder = "~/Content/Logos";
+                    var file = string.Format("{0}.jpg", company.CompanyId);
+
+                    var response = FilesHelper.UploadPhoto(company.LogoFile, folder,file);
+                    if (response)
+                    {
+                        pic = string.Format("{0}/{1}", folder, file);
+                        company.Logo = pic;
+                        
+                    }
                 }
 
-                company.Logo = pic;
-                db.Companies.Add(company);
+
+                db.Entry(company).State = EntityState.Modified;
                 db.SaveChanges();
                 return RedirectToAction("Index");
             }
@@ -106,21 +118,31 @@ namespace ECommerce.Controllers
         // obter mais detalhes, consulte https://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Edit( Company company)
+        public ActionResult Edit(Company company)
         {
             if (ModelState.IsValid)
             {
 
-                var pic = string.Empty;
-                var folder = "~/Content/Logos";
-
+                
                 if (company.LogoFile != null)
                 {
-                    pic = FilesHelper.UploadPhoto(company.LogoFile, folder);
-                    pic = string.Format("{0}/{1}", folder, pic);
+                    var pic = string.Empty;
+                    var folder = "~/Content/Logos";
+                    var file = string.Format("{0}.jpg", company.CompanyId);
+
+
+                    var response = FilesHelper.UploadPhoto(company.LogoFile, folder, file);
+                    if (response)
+                    {
+
+                        pic = string.Format("{0}/{1}", folder, file);
+                        company.Logo = pic;
+                       // db.Entry(company).State = EntityState.Modified;
+                       // db.SaveChanges();
+                    }
                 }
 
-                company.Logo = pic;
+                //company.Logo = pic;
                 db.Entry(company).State = EntityState.Modified;
                 db.SaveChanges();
                 return RedirectToAction("Index");
